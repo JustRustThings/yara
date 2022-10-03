@@ -310,7 +310,8 @@ AS_IF([test "x$have_crypto" = "xno"],
 	      AC_MSG_CHECKING([for Microsoft Crypto API])
         AC_CHECK_HEADERS([wincrypt.h],
           [
-	          AC_MSG_RESULT([The "hash" module functions will be provided through the Microsoft Crypto API])
+            AC_CHECK_LIB(crypt32, CryptQueryObject)
+            AC_MSG_RESULT([The "hash" module functions will be provided through the Microsoft Crypto API])
             # FIXME: Add PC_LIBS_PRIVATE entries?
             build_hash_module=true
           ],
