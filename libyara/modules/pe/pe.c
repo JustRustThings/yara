@@ -1973,25 +1973,25 @@ static void pe_parse_cert_context(
   PCCRYPT_OID_INFO oid_info;
   char* s;
 
-  yr_set_integer(
+  set_integer(
     filetime_to_timestamp(pCertContext->pCertInfo->NotBefore),
     pe->object,
     "signatures[%i].not_before",
     sig_index);
-  yr_set_integer(
+  set_integer(
     filetime_to_timestamp(pCertContext->pCertInfo->NotAfter),
     pe->object,
     "signatures[%i].not_after",
     sig_index);
 
-  yr_set_integer(
+  set_integer(
     // The values are 0-based, so add one.
     pCertContext->pCertInfo->dwVersion + 1,
     pe->object,
     "signatures[%i].version",
     sig_index);
 
-  yr_set_string(
+  set_string(
     pCertContext->pCertInfo->SignatureAlgorithm.pszObjId,
     pe->object,
     "signatures[%i].algorithm_oid",
@@ -2011,7 +2011,7 @@ static void pe_parse_cert_context(
     algo_name = yr_malloc(len);
     strlcpy_w(algo_name, (const char *)oid_info->pwszName, len);
 
-    yr_set_string(
+    set_string(
       algo_name,
       pe->object,
       "signatures[%i].algorithm",
@@ -2023,7 +2023,7 @@ static void pe_parse_cert_context(
     &(pCertContext->pCertInfo->Issuer));
   if (s)
   {
-    yr_set_string(s, pe->object, "signatures[%i].issuer", sig_index);
+    set_string(s, pe->object, "signatures[%i].issuer", sig_index);
     yr_free(s);
   }
   s = get_cert_name(
@@ -2032,14 +2032,14 @@ static void pe_parse_cert_context(
   );
   if (s)
   {
-    yr_set_string(s, pe->object, "signatures[%i].subject", sig_index);
+    set_string(s, pe->object, "signatures[%i].subject", sig_index);
     yr_free(s);
   }
 
   s = serial_number_to_string(&(pCertContext->pCertInfo->SerialNumber));
   if (s)
   {
-    yr_set_string(s, pe->object, "signatures[%i].serial", sig_index);
+    set_string(s, pe->object, "signatures[%i].serial", sig_index);
     yr_free(s);
   }
 
@@ -2052,7 +2052,7 @@ static void pe_parse_cert_context(
   for (int j = 0; j < YR_SHA1_LEN; j++) {
     sprintf(thumbprint_ascii + (j * 2), "%02x", thumbprint[j]);
   }
-  yr_set_string(
+  set_string(
     thumbprint_ascii,
     pe->object,
     "signatures[%i].thumbprint",
@@ -2169,7 +2169,7 @@ static void pe_parse_certificates_with_wincrypt(PE* pe)
     return;
 
   // Default to 0 signatures until we know otherwise.
-  yr_set_integer(0, pe->object, "number_of_signatures");
+  set_integer(0, pe->object, "number_of_signatures");
 
   // directory->VirtualAddress is a file offset. Don't call pe_rva_to_offset().
   if (yr_le32toh(directory->VirtualAddress) == 0 ||
@@ -2236,7 +2236,7 @@ static void pe_parse_certificates_with_wincrypt(PE* pe)
     win_cert = (PWIN_CERTIFICATE) ((end + 7) & -8);
   }
 
-  yr_set_integer(counter, pe->object, "number_of_signatures");
+  set_integer(counter, pe->object, "number_of_signatures");
 }
 
 #endif  // defined(HAVE_LIBCRYPTO) || defined(HAVE_WINCRYPT_H)
