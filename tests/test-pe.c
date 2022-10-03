@@ -339,10 +339,43 @@ int main(int argc, char** argv)
         condition: \
           pe.number_of_signatures == 1 and \
           pe.signatures[0].thumbprint == \"c1bf1b8f751bf97626ed77f755f0a393106f2454\" and \
-          pe.signatures[0].subject == \"/C=US/ST=California/L=Menlo Park/O=Quicken, Inc./OU=Operations/CN=Quicken, Inc.\" \
+          pe.signatures[0].issuer == \"/C=US/O=Symantec Corporation/OU=Symantec Trust Network/CN=Symantec Class 3 SHA256 Code Signing CA\" and \
+          pe.signatures[0].subject == \"/C=US/ST=California/L=Menlo Park/O=Quicken, Inc./OU=Operations/CN=Quicken, Inc.\" and \
+          pe.signatures[0].version == 3 and \
+          pe.signatures[0].algorithm == \"sha256WithRSAEncryption\" and \
+          pe.signatures[0].algorithm_oid == \"1.2.840.113549.1.1.11\" and \
+          pe.signatures[0].serial == \"21:bd:b2:cb:ec:e5:43:1e:24:f7:56:74:d6:0e:9c:1d\" and \
+          pe.signatures[0].not_before == 1491955200 and \
+          pe.signatures[0].not_after == 1559692799 \
       }",
       "tests/data/"
       "079a472d22290a94ebb212aa8015cdc8dd28a968c6b4d3b88acdd58ce2d3b885");
+
+#endif
+
+#if defined(HAVE_WINCRYPT_H)
+
+  assert_true_rule_file(
+      "import \"pe\" \
+      rule test { \
+        condition: \
+          pe.number_of_signatures == 1 and \
+          pe.signatures[0].thumbprint == \"c1bf1b8f751bf97626ed77f755f0a393106f2454\" and \
+          pe.signatures[0].issuer == \"C=US, O=Symantec Corporation, OU=Symantec Trust Network, CN=Symantec Class 3 SHA256 Code Signing CA\" and \
+          pe.signatures[0].subject == \"C=US, S=California, L=Menlo Park, O=\\\"Quicken, Inc.\\\", OU=Operations, CN=\\\"Quicken, Inc.\\\"\" and \
+          pe.signatures[0].version == 3 and \
+          pe.signatures[0].algorithm == \"sha256RSA\" and \
+          pe.signatures[0].algorithm_oid == \"1.2.840.113549.1.1.11\" and \
+          pe.signatures[0].serial == \"21:bd:b2:cb:ec:e5:43:1e:24:f7:56:74:d6:0e:9c:1d\" and \
+          pe.signatures[0].not_before == 1491955200 and \
+          pe.signatures[0].not_after == 1559692799 \
+      }",
+      "tests/data/"
+      "079a472d22290a94ebb212aa8015cdc8dd28a968c6b4d3b88acdd58ce2d3b885");
+
+#endif
+
+#if defined(HAVE_LIBCRYPTO) || defined(HAVE_WINCRYPT_H)
 
   assert_true_rule_file(
       "import \"pe\" \
