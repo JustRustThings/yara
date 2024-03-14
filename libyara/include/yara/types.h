@@ -293,13 +293,13 @@ struct YR_RULE
   // Number of atoms generated for this rule.
   int32_t num_atoms;
 
-  uint32_t required_strings;
-
   DECLARE_REFERENCE(const char*, identifier);
   DECLARE_REFERENCE(const char*, tags);
   DECLARE_REFERENCE(YR_META*, metas);
   DECLARE_REFERENCE(YR_STRING*, strings);
   DECLARE_REFERENCE(YR_NAMESPACE*, ns);
+
+  uint32_t required_strings;
 };
 
 struct YR_SUMMARY
